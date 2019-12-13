@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -199,19 +201,86 @@ namespace RCNClinicApp
             return string.Concat(objArray1);
         }
 
-       
+        public static string getMonthName(int i)
+        {
+            string result = "";
+            switch (i)
+            {
+                case 1:
+                    result = "فروردین";
+                    break;
+                case 2:
+                    result = "اردیبهشت";
+                    break;
+                case 3:
+                    result = "خرداد";
+                    break;
+                case 4:
+                    result = "تیر";
+                    break;
+                case 5:
+                    result = "مرداد";
+                    break;
+                case 6:
+                    result = "شهریور";
+                    break;
+                case 7:
+                    result = "مهر";
+                    break;
+                case 8:
+                    result = "آبان";
+                    break;
+                case 9:
+                    result = "آذر";
+                    break;
+                case 10:
+                    result = "دی";
+                    break;
+                case 11:
+                    result = "بهمن";
+                    break;
+                case 12:
+                    result = "اسفند";
+                    break;
+                default:
+
+                    break;
+            }
+            return result;
+        }
+
+
+        public static long getIdVisitbyIdReception(long IdReception, string date)
+        {
+
+            long IdVisit = -1;
+            date = string.IsNullOrEmpty(date) ? "" : date.Replace('_', '/');
+            if (!string.IsNullOrEmpty(date) && date.Contains("/"))
+            {
+                DateTime from = MYHelper.DiffDate(date, true);
+                DateTime to = MYHelper.DiffDate(date, false);
+                ContextDb db = new ContextDb();
+                var model = db.tblVisits.FirstOrDefault(c => c.IdReception == IdReception && c.VisitDate >= from && c.VisitDate <= to);
+                if (model != null)
+                    IdVisit = model.Id;
+            }
+            return IdVisit;
+        }
+
     }
 
     partial class tblVisit
     {
         ContextDb dd = new ContextDb();
-        public string PersianDate
-        {
-            get
-            {
-                return MYHelper.PersianDate(this.VisitDate);
-            }
-        }
+        //public string PersianDate
+        //{
+        //    get
+        //    {
+        //        return MYHelper.PersianDate(this.VisitDate);
+        //    }
+        //}
+        [NotMapped]
+        public string FarsiDate { get; set; }
         public string TotalMeeting
         {
 
@@ -222,5 +291,44 @@ namespace RCNClinicApp
                 return " جلسه " + (qq.ToList().IndexOf(visit) + 1);
             }
         }
+    }
+
+    partial class tblPicture
+    {
+        [NotMapped]
+        public IFormFile Image { get; set; }
+
+        [NotMapped]
+        public long IdReception { get; set; }
+
+        [NotMapped]
+        public string date { get; set; }
+
+    }
+
+    public class reportvisit_result
+    {
+        public int Row { get; set; }
+        public string FullName { get; set; }
+        public string Dossier { get; set; }
+        public string Tel { get; set; }
+        public string service { get; set; }
+        public string total { get; set; }
+        public string Comment { get; set; }
+        public string PersianDate { get; set; }
+
+        public double? Payment { get; set; }
+       
+
+    }
+
+    public class chartvisit_result
+    {
+        public string Month { get; set; }
+        public int IsDo { get; set; }
+
+        public int IsNotDo { get; set; }
+
+
     }
 }

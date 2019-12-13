@@ -28,6 +28,27 @@ namespace RCNClinicApp.Controllers
 
         }
 
+
+        [HttpGet("{FName}/{LName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IEnumerable<tbl_patient>> GetAll(string FName, string LName)
+        {
+
+            if (string.IsNullOrEmpty(FName) && string.IsNullOrEmpty(LName))
+                return await repository.GetAll();
+
+            else if (string.IsNullOrEmpty(FName) && !string.IsNullOrEmpty(LName))
+                return await repository.GetAll(c => c.LastName.Contains(LName));
+
+            else if (!string.IsNullOrEmpty(FName) && string.IsNullOrEmpty(LName))
+                return await repository.GetAll(c => c.Name.Contains(FName));
+
+            else
+                return await repository.GetAll(c => c.Name.Contains(FName) && c.LastName.Contains(LName));
+
+        }
+
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -85,13 +106,13 @@ namespace RCNClinicApp.Controllers
                 await repository.Add(model);
                 return true;
             }
-            
+
             catch (Exception)
             {
                 return false;
             }
         }
 
-      
+
     }
 }

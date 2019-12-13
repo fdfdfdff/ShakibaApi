@@ -37,6 +37,9 @@ namespace RCNClinicApp.Controllers
             var query = await db.RptPayment_Result.FromSql("RptPayment {0},{1}", dateFrom, dateto).OrderByDescending(c => c.Id).ToListAsync();
             return query;
         }
+
+       
+
         //api/global/idreception
         [HttpGet("{idreception}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -60,25 +63,30 @@ namespace RCNClinicApp.Controllers
 
         [HttpGet("changeStatus")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public JsonR changeStatus(long ReceptionId,int IdWaiting,string comment="")
+        public async Task<ActionResult<JsonR>> changeStatus(long ReceptionId,int IdWaiting)//,string comment="")
         {
             string today = MYHelper.PersianDate(MYHelper.GetDate());
             DateTime from = MYHelper.DiffDate(today, true).AddDays(-7);
             DateTime to = MYHelper.DiffDate(today, false);
-            
+            JsonR result;
             var lst = repository.GetAll().Result;
             tblVisit model =lst.FirstOrDefault(c => c.IdReception == ReceptionId && c.VisitDate >= from && c.VisitDate <= to);
             if (model == null)
             {
-                return new JsonR {  Title="Error", Message= "ویزیت به تاریخ امروز وجود ندارد" };
-              
+                result= new JsonR {  Title="error", Message= "ویزیت به تاریخ امروز وجود ندارد" };
+                return result;
             }
             model.IdWaiting = IdWaiting;
-            model.tblReception.IdWaiting = IdWaiting;
-            if (!string.IsNullOrEmpty(comment))
-                model.Comment = comment;
+            ContextDb db = new ContextDb();
+            db.tblReceptions.Find(ReceptionId).IdWaiting = IdWaiting;
+            
+            //if (!string.IsNullOrEmpty(comment))
+            //    model.Comment = comment;
             db.SaveChanges();
-            return new JsonR { Title = "Success", Message = "عملیات با موفقیت انجام شد" };
+            result = new JsonR { Title = "success", Message = "عملیات با موفقیت انجام شد" };
+            return result;
+
+
         }
     }
 

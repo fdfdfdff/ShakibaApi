@@ -22,3 +22,4 @@ E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.Mobi
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Release\netcoreapp2.0\win-x64\RCNClinicApp.MobileAppService.AssemblyInfo.cs
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Release\netcoreapp2.0\win-x64\RCNClinicApp.MobileAppService.dll
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Release\netcoreapp2.0\win-x64\RCNClinicApp.MobileAppService.pdb
+E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\bin\Release\netcoreapp2.0\win-x64\web.config

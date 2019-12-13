@@ -41,7 +41,13 @@ namespace RCNClinicApp.Controllers
             {
                 return NotFound();
             }
-
+            using (ContextDb db = new ContextDb())
+            {
+                tblReception.tbl_patient = db.tbl_patient.Find(tblReception.IdPatient);
+                var lstvisit = db.tblVisits.Where(c => c.IdReception == tblReception.Id).ToList();
+                lstvisit.ForEach(c => c.FarsiDate = MYHelper.PersianDate(c.VisitDate));
+                tblReception.tblVisits = lstvisit;
+            }
             return tblReception;
         }
 
@@ -77,19 +83,36 @@ namespace RCNClinicApp.Controllers
                 else
                     db.Entry(patient).State = EntityState.Modified;
                 db.SaveChanges();
-                 model.IdPatient = patient.Id;
-                model.tbl_patient = null;
-                var lstvisit = model.tblVisits;
-                lstvisit.Where(c=>c.Id<1).ToList().ForEach(c => { c.IdWaiting = 4; c.DateRequest = MYHelper.GetDate();c.IdReception = model.Id;c.VisitDate = MYHelper.GetDate(c.FarsiDate); });
-                db.tblVisits.AddRange(lstvisit);
 
+                model.IdPatient = patient.Id;
+                model.tbl_patient = null;
+                var lstvisit = model.tblVisits.Where(c => c.Id < 1);
+                var service = db.tbl_Service.Find(model.IdService);
+
+                lstvisit.ToList().ForEach(c =>
+                {
+                    c.Id = 0;
+                    c.IdWaiting = 4;
+                    c.DateRequest = MYHelper.GetDate();
+                    c.IdReception = id;
+                    c.VisitDate = MYHelper.GetDate(c.FarsiDate);
+                    c.Count = 1;
+                    c.Percents = 100;
+                    c.FreePrices = service.FreePrices;
+                    c.Tariff = service.FreePrices;
+
+                });
+                db.tblVisits.AddRange(lstvisit);
+                db.SaveChanges();
+                
                 await repository.Update(model);
                 return true;
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception err)
             {
+
                 return false;
-                
+
             }
         }
 
@@ -102,7 +125,9 @@ namespace RCNClinicApp.Controllers
             try
             {
                 ContextDb db = new ContextDb();
+                model.Id = 0;
                 tbl_patient patient = model.tbl_patient;
+
                 if (patient.Id <= 0)
                 {
                     string dossier = string.Empty;
@@ -123,8 +148,19 @@ namespace RCNClinicApp.Controllers
                 model.IdWaiting = 4;
                 model.RegDate = MYHelper.GetDate();
                 model.IdGeneralGroup = 1;
-                //var lstvisit = model.tblVisits;
-                model.tblVisits.ToList().ForEach(c => { c.IdWaiting = 4; c.DateRequest = MYHelper.GetDate();c.IdReception = model.Id;c.VisitDate = MYHelper.GetDate(c.FarsiDate); });
+                var service = db.tbl_Service.Find(model.IdService);
+                model.tblVisits.ToList().ForEach(c =>
+                {
+                    c.Id = 0;
+                    c.IdWaiting = 4;
+                    c.DateRequest = MYHelper.GetDate();
+                    c.IdReception = model.Id;
+                    c.VisitDate = MYHelper.GetDate(c.FarsiDate);
+                    c.Count = 1;
+                    c.Percents = 100;
+                    c.FreePrices = service.FreePrices;
+                    c.Tariff = service.FreePrices;
+                });
 
                 await repository.Add(model);
                 return true;

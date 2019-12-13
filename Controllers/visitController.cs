@@ -19,11 +19,13 @@ namespace RCNClinicApp.Controllers
             this.repository = repository;
         }
 
-        [HttpGet("{fromdate}/{todate}/{LName}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll(string fromdate, string todate, string LName)
+        public IActionResult GetAll(string LName,string fromdate, string todate)
         {
 
+            fromdate = fromdate.Replace('_', '/');
+            todate = todate.Replace('_', '/');
             ContextDb db = new ContextDb();
             IEnumerable<GetVisitListResult> lst;
             if (!string.IsNullOrEmpty(LName))
@@ -98,43 +100,43 @@ namespace RCNClinicApp.Controllers
                     switch (i)
                     {
                         case 1:
-                            item.Date1 = visit.PersianDate;
+                            item.Date1 =MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting1 = visit.IdWaiting;
                             break;
                         case 2:
-                            item.Date2 = visit.PersianDate;
+                            item.Date2 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting2 = visit.IdWaiting;
                             break;
                         case 3:
-                            item.Date3 = visit.PersianDate;
+                            item.Date3 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting3 = visit.IdWaiting;
                             break;
                         case 4:
-                            item.Date4 = visit.PersianDate;
+                            item.Date4 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting4 = visit.IdWaiting;
                             break;
                         case 5:
-                            item.Date5 = visit.PersianDate;
+                            item.Date5 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting5 = visit.IdWaiting;
                             break;
                         case 6:
-                            item.Date6 = visit.PersianDate;
+                            item.Date6 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting6 = visit.IdWaiting;
                             break;
                         case 7:
-                            item.Date7 = visit.PersianDate;
+                            item.Date7 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting7 = visit.IdWaiting;
                             break;
                         case 8:
-                            item.Date8 = visit.PersianDate;
+                            item.Date8 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting8 = visit.IdWaiting;
                             break;
                         case 9:
-                            item.Date9 = visit.PersianDate;
+                            item.Date9 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting9 = visit.IdWaiting;
                             break;
                         case 10:
-                            item.Date10 = visit.PersianDate;
+                            item.Date10 = MYHelper.PersianDate(visit.VisitDate);
                             item.IdWaiting10 = visit.IdWaiting;
                             break;
 
@@ -146,31 +148,77 @@ namespace RCNClinicApp.Controllers
             return Ok(lst);
         }
 
-        [HttpGet("{fromdate}/{todate}/{idService}")]
+        [HttpGet("getReportVisit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<tblVisit>> GetAll(string fromdate, string todate, int? idService)
+        public IActionResult GetAll(string fromdate, string todate, int? idService)
         {
+            fromdate = fromdate.Replace('_', '/');
+            todate = todate.Replace('_', '/');
             DateTime from = MYHelper.DiffDate(fromdate, true);
-            DateTime to = MYHelper.DiffDate(todate,false);
-            return await repository.GetAll(c => 
-            c.VisitDate >= from && 
-            c.VisitDate <= to &&
-            (idService.HasValue ? (c.tblReception.IdService == idService) : true)
-            );
+            DateTime to = MYHelper.DiffDate(todate, false);
+            ContextDb db = new ContextDb();
+            var qq = repository.GetAll(c =>
+             c.VisitDate >= from &&
+             c.VisitDate <= to &&
+             (idService.HasValue ? (c.tblReception.IdService == idService) : true)
+            ).Result;
+            List<reportvisit_result> result = new List<reportvisit_result>();
+            int i = 0;
+            foreach (var item in qq)
+            {
+                i++;
+                var reception = db.tblReceptions.Find(item.IdReception);
+                var service = db.tbl_Service.Find(reception.IdService);
+                var patient = db.tbl_patient.Find(reception.IdPatient);
+                result.Add(new reportvisit_result
+                {
+                    Comment = item.Comment,
+                    Dossier = patient.DossierNumberPermanent,
+                    FullName = patient.Name + ' ' + patient.LastName,
+                    Payment = item.FreePrices,
+                    PersianDate = MYHelper.PersianDate(item.VisitDate),
+                    service = service.Name,
+                    Tel = patient.Tel,
+                    total = item.TotalMeeting,
+                    Row = i
+                });
+            }
+
+            return Ok(result);
         }
 
-        [HttpGet("{year}/{idService}/{iddoctor}")]
+        [HttpGet("getreportChart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<tblVisit>> GetAll(string year, int idService=0, int iddoctor=0)
+        public IActionResult GetAll(string year, int idService = 0, int iddoctor = 0)
         {
             DateTime from = MYHelper.DiffDate(year + "/01/01", true);
             DateTime to = MYHelper.DiffDate(year + "/12/29", false);
-            return await repository.GetAll(c =>
-            c.VisitDate >= from &&
-            c.VisitDate <= to &&
-            (idService>0 ? (c.tblReception.IdService == idService) : true) &&
-            (iddoctor > 0 ? (c.tblReception.IdDoctor == iddoctor) : true)
-            );
+            var qq = repository.GetAll(c =>
+             c.VisitDate >= from &&
+             c.VisitDate <= to &&
+             (idService > 0 ? (c.tblReception.IdService == idService) : true) &&
+             (iddoctor > 0 ? (c.tblReception.IdDoctor == iddoctor) : true)
+            ).Result;
+
+            List<chartvisit_result> result = new List<chartvisit_result>();
+            for (int i = 1; i <= 12; i++)
+            {
+                string month = MYHelper.getMonthName(i);
+                DateTime fromdate = MYHelper.DiffDate(year + "/" + i.ToString().PadLeft(2, '0') + "/01", true);
+                DateTime todate = MYHelper.DiffDate(year + "/" + i.ToString().PadLeft(2, '0') + "/" + (i == 12 ? "29" : "30"), false);
+                var query = qq.Where(c => c.VisitDate >= fromdate && c.VisitDate <= todate).ToList();
+                int isdo = query.Where(c => c.IdWaiting == 5).Count();
+                int isnotdo = query.Where(c => c.IdWaiting == 7 || c.IdWaiting == 8).Count();
+
+                result.Add(new chartvisit_result
+                {
+                    IsDo = isdo,
+                    IsNotDo = isnotdo,
+                    Month = month
+                });
+            }
+
+            return Ok(result);
         }
 
 
@@ -188,13 +236,13 @@ namespace RCNClinicApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<tblVisit>> Get(long idreception, DateTime date)
         {
-            var tblVisit = await repository.Get(c=>c.IdReception==idreception && c.VisitDate==date);
+            var tblVisit = await repository.Get(c => c.IdReception == idreception && c.VisitDate == date);
 
             if (tblVisit == null)
             {
                 return NotFound();
             }
-
+            tblVisit.FarsiDate = MYHelper.PersianDate(tblVisit.VisitDate);
             return tblVisit;
         }
 
@@ -242,23 +290,67 @@ namespace RCNClinicApp.Controllers
         //[HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Delete(long id)
+        public async Task<ActionResult<JsonR>> Delete(long id)
         {
+
+
+            JsonR result;
             var tblVisit = await repository.Get(id);
             if (tblVisit == null)
             {
-                return NotFound();
+                result = new JsonR
+                {
+                    Title = "error",
+                    Message = "چنین آیتمی وجود ندارد"
+                };
+            }
+            else
+            {
+                try
+                {
+                    ContextDb db = new ContextDb();
+
+                    if (db.tblPictures.Any(c => c.IdVisit == id))
+                    {
+
+                        result = new JsonR
+                        {
+                            Title = "error",
+                            Message = "برای این جلسه تصاویر ثبت شده است و امکان حذف نمیباشد"
+                        };
+                    }
+                    else if (tblVisit.IdWaiting == 5)
+                    {
+
+                        result = new JsonR
+                        {
+                            Title = "error",
+                            Message = "این جلسه برگزار گردیده است و امکان حذف نمیباشد"
+                        };
+                    }
+                    else
+                    {
+                        db.tbl_SMS.RemoveRange(db.tbl_SMS.Where(c => c.IdVisit == id));
+                        await repository.Delete(id);
+                        result = new JsonR
+                        {
+                            Title = "success",
+                            Message = "حذف با موفقیت انجام گردید"
+                        };
+                    }
+                    return result;
+                }
+                catch (Exception err)
+                {
+                    result = new JsonR
+                    {
+                        Title = "error",
+                        Message = err.Message
+                    };
+                }
             }
 
-            try
-            {
-                await repository.Delete(id);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return NoContent();
-            }
+            return result;
         }
 
 

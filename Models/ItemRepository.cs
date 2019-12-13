@@ -131,43 +131,43 @@ namespace RCNClinicApp.Models
                     switch (i)
                     {
                         case 1:
-                            item.Date1 = visit.PersianDate;
+                            item.Date1 = visit.FarsiDate;
                             item.IdWaiting1 = visit.IdWaiting;
                             break;
                         case 2:
-                            item.Date2 = visit.PersianDate;
+                            item.Date2 = visit.FarsiDate;
                             item.IdWaiting2 = visit.IdWaiting;
                             break;
                         case 3:
-                            item.Date3 = visit.PersianDate;
+                            item.Date3 = visit.FarsiDate;
                             item.IdWaiting3 = visit.IdWaiting;
                             break;
                         case 4:
-                            item.Date4 = visit.PersianDate;
+                            item.Date4 = visit.FarsiDate;
                             item.IdWaiting4 = visit.IdWaiting;
                             break;
                         case 5:
-                            item.Date5 = visit.PersianDate;
+                            item.Date5 = visit.FarsiDate;
                             item.IdWaiting5 = visit.IdWaiting;
                             break;
                         case 6:
-                            item.Date6 = visit.PersianDate;
+                            item.Date6 = visit.FarsiDate;
                             item.IdWaiting6 = visit.IdWaiting;
                             break;
                         case 7:
-                            item.Date7 = visit.PersianDate;
+                            item.Date7 = visit.FarsiDate;
                             item.IdWaiting7 = visit.IdWaiting;
                             break;
                         case 8:
-                            item.Date8 = visit.PersianDate;
+                            item.Date8 = visit.FarsiDate;
                             item.IdWaiting8 = visit.IdWaiting;
                             break;
                         case 9:
-                            item.Date9 = visit.PersianDate;
+                            item.Date9 = visit.FarsiDate;
                             item.IdWaiting9 = visit.IdWaiting;
                             break;
                         case 10:
-                            item.Date10 = visit.PersianDate;
+                            item.Date10 = visit.FarsiDate;
                             item.IdWaiting10 = visit.IdWaiting;
                             break;
 

@@ -65,8 +65,8 @@ E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.Mobi
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\bin\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.runtimeconfig.dev.json
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\bin\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.dll
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\bin\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.pdb
-E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.csprojAssemblyReference.cache
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.AssemblyInfoInputs.cache
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.AssemblyInfo.cs
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.dll
 E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\obj\Debug\netcoreapp2.0\RCNClinicApp.MobileAppService.pdb
+E:\Programming\RCNClinic\FinalAppold\RCNClinicApp\RCNClinicApp\RCNClinicApp.MobileAppService\bin\Debug\netcoreapp2.0\web.config

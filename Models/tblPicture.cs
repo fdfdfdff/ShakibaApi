@@ -1,5 +1,6 @@
 namespace RCNClinicApp
 {
+    using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -11,9 +12,11 @@ namespace RCNClinicApp
 
         public long IdVisit { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(150)]
         public string Filepath { get; set; }
+
+       
 
         public virtual tblVisit tblVisit { get; set; }
     }

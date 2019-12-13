@@ -22,15 +22,24 @@ namespace RCNClinicApp.Controllers
 
         [HttpGet("{username}/{password}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<tbl_Users>> Get(string username,string password)
+        public async Task<ActionResult<JsonR>> Get(string username,string password)
         {
             var tbl_Users =await repository.Get(c => c.UserName == username && c.Password == password && !c.IsDelete.GetValueOrDefault(false));
             if (tbl_Users == null)
             {
-                return NotFound();
+                return new JsonR
+                {
+                    Title = "error",
+                    Message = "چنین کاربری وجود ندارد"
+                };
             }
 
-            return tbl_Users;
+            return new JsonR
+            {
+                Title = "success",
+                Message =tbl_Users.Id.ToString()
+                
+            };
         }
 
        

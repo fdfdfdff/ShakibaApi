@@ -19,4 +19,11 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\FileUpload\1f20e88c-aaa2-468e-bf98-a7ce33aa7e7d.jpg" />
+    <None Include="wwwroot\FileUpload\2picture.jpg" />
+    <None Include="wwwroot\FileUpload\61b168d2-1f6c-460e-9052-c5e884db8f27.jpg" />
+    <None Include="wwwroot\FileUpload\9fce12d9-37e7-4d7e-aa1a-3f59a568af07.jpg" />
+  </ItemGroup>
+
 </Project>

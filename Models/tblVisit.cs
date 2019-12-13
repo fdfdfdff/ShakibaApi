@@ -9,6 +9,7 @@ namespace RCNClinicApp
     public partial class tblVisit
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+
         public tblVisit()
         {
             tbl_Advertising = new HashSet<tbl_Advertising>();
@@ -36,8 +37,7 @@ namespace RCNClinicApp
 
         public DateTime? DateRequest { get; set; }
 
-        [NotMapped]
-        public string FarsiDate { get; set; }
+        
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_Advertising> tbl_Advertising { get; set; }

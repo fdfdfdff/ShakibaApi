@@ -10,6 +10,7 @@ using RCNClinicApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace RCNClinicApp.MobileAppService
 {
@@ -131,16 +132,46 @@ namespace RCNClinicApp.MobileAppService
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+            // Setup CORS
+            // ********************
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin(); // For anyone access.
+
+            corsBuilder.AllowCredentials();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
+            });
+            // Setup CORS
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+           
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc();
+            //app.UseCors(builder => builder
+            //           .AllowAnyHeader()
+            //           .AllowAnyMethod()
+            //           .AllowAnyOrigin()
+            //           .AllowCredentials());
 
+            app.UseMvc();
+            // Setup CORS
+            // *********
+            app.UseCors("SiteCorsPolicy");
+            // Setup CORS
+
+            //app.UseCors("CorsPolicy");
+            //app.UseStaticFiles();
+            //app.UseCors(builder =>
+            //builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

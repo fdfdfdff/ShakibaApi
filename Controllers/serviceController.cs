@@ -48,7 +48,7 @@ namespace RCNClinicApp.Controllers
         //[HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> Put(int id, tbl_Service model)
+        public async Task<ActionResult<JsonR>> Put(int id, tbl_Service model)
         {
             if (id != model.Id)
             {
@@ -58,11 +58,11 @@ namespace RCNClinicApp.Controllers
             try
             {
                 await repository.Update(model);
-                return true;
+                return new JsonR { Title = "success", Message = "عملیات با موفقیت انجام گردید" };
             }
             catch (DbUpdateConcurrencyException)
             {
-                return false;
+                return new JsonR { Title = "error", Message = "خطا در عملیات!مجددا سعی کنید" };
             }
         }
 
@@ -70,16 +70,16 @@ namespace RCNClinicApp.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> Post(tbl_Service model)
+        public async Task<ActionResult<JsonR>> Post(tbl_Service model)
         {
             try
             {
                  await repository.Add(model);
-                return true;
+                return new JsonR { Title="success",Message="عملیات با موفقیت انجام گردید" };
             }
             catch (Exception)
             {
-                return false;
+                return new JsonR { Title = "error", Message = "خطا در عملیات!مجددا سعی کنید" };
             }
         }
 
